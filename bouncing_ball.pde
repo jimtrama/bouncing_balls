@@ -1,9 +1,9 @@
 Ball[] balls;
-int l = 2;
+int l = 200;
 void setup() {
-  size(500, 500);
+  //size(500, 500);
   //windowMove(1500,100);
-  //fullScreen();
+  fullScreen();
   colorMode(HSB,100);
   balls = new Ball[l];
   for (int i =0; i<l; i++) {
@@ -25,7 +25,7 @@ void setup() {
 void draw() {
   background(0);
   for (int i = 0; i < balls.length; i++) {
-    balls[i].update(i == 0);
+    balls[i].update();
     balls[i].show();
     // if(frameCount%100==0){
     //     balls[i].gY *= -1;

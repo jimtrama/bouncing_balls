@@ -15,13 +15,13 @@ class Ball {
 
   Ball(int i) {
     pos = new PVector(random(0, width), random(0, height));
-    speed = new PVector(random(-4, 4), random(-4, 4));
+    speed = new PVector(random(-5, 5), random(-5, 5));
     accelaration = new PVector(0, 0);
-    mass = 5 * random(2, 4);
+    mass = 5 * random(1, 5);
     r = mass*5;
-    gY = 0.0;
+    gY = 0.1;
     gX = 0.0;
-    yDumping = 1;
+    yDumping = 0.5;
     xDumping = 1;
     id = i;
   }
@@ -34,67 +34,25 @@ class Ball {
     accelaration.add(gX, gY);
   }
 
-  void update(boolean flag) {
-    if (flag) {
-      pos.y = mouseY;
-      pos.x = mouseX;
-      return;
-    }
-    //Collition Resolution
+  void update() {
+
     for (Ball other : others) {
 
-      if (other.pos.dist(pos)  <= r/2 + other.r / 2) {
-        float angle_of_collition = 0;
-
-
-        // if(other.pos.x>pos.x){
-        //  angle_of_collition+=PI;
-        //  print("bike"+id);
-        // }
+      if (other.pos.dist(pos)  < r/2 + other.r / 2) {
+        float angle_of_collition =  atan((pos.y-other.pos.y)/(pos.x-other.pos.x));
         float distance = r/2 + other.r / 2 - other.pos.dist(pos);
-        float dx = 0; //= cos(angle_of_collition) * distance;
-        float dy = 0; //= sin(angle_of_collition) * distance;
 
-
-        // println(angle_of_collition);
-        if (other.pos.x>pos.x && other.pos.y > pos.y ) {
-          angle_of_collition =   atan((pos.y-other.pos.y)/(pos.x-other.pos.x)) - PI;
-          dx= cos(angle_of_collition) * distance;
-          dy= sin(angle_of_collition) * distance;
-          pos.add(new PVector(dx, -dy));
-          other.pos.add(new PVector(-dx, dy));
-          println("tetarto: "+id);
-        } else  if (other.pos.x < pos.x  && other.pos.y > pos.y ) {
-          angle_of_collition =   atan((pos.y-other.pos.y)/(pos.x-other.pos.x));
-          dx= cos(angle_of_collition) * distance;
-          dy= sin(angle_of_collition) * distance;
-          pos.add(new PVector(dx, dy));
-          other.pos.add(new PVector(-dx, -dy));
-          println("trito: "+id);
-        } else if (other.pos.x > pos.x && other.pos.y  <  pos.y ) {
-          angle_of_collition =   atan((pos.y-other.pos.y)/(pos.x-other.pos.x)) +  PI;
-          dx= cos(angle_of_collition) * distance;
-          dy= sin(angle_of_collition) * distance;
-          pos.add(new PVector(dx, dy));
-          other.pos.add(new PVector(-dx, -dy));
-          println("proto: "+id);
-        } else  if (other.pos.x  <  pos.x && other.pos.y < pos.y) {
-          angle_of_collition =  -atan((pos.y-other.pos.y)/(pos.x- other.pos.x))  ;
-          dx= cos(angle_of_collition) * distance;
-          dy= sin(angle_of_collition) * distance;
-          pos.add(new PVector(dx, dy));
-          other.pos.add(new PVector(-dx, -dy));
-          println("deutero: "+id);
+        if (other.pos.x > pos.x) {
+          angle_of_collition+=PI;
         }
-        println(angle_of_collition);
-        println("------------------");
 
+        float dx = cos(angle_of_collition) * (distance/2);
+        float dy = sin(angle_of_collition) * (distance/2);
+        pos.add(new PVector(dx, dy));
+        other.pos.add(new PVector(-dx, -dy));
 
-        // float dxSpead = cos(angle_of_collition) * (((mass - other.mass)*speed.x+2*other.mass*other.speed.x)/(mass + other.mass));
-        // float dySpead = sin(angle_of_collition) * (((mass - other.mass)*speed.y+2*other.mass*other.speed.y)/(mass + other.mass));
+        println("k before: "+clacKineEnergy(speed.x,speed.y,other.speed.x,other.speed.y,mass,other.mass));
 
-        // float dxSpeadOther = cos(angle_of_collition) * (((other.mass - mass)*other.speed.x+2*mass*speed.x)/(mass + other.mass));
-        // float dySpeadOther = sin(angle_of_collition) * (((other.mass - mass)*other.speed.y+2*mass*speed.y)/(mass + other.mass));
         float u1n = speed.x * cos(angle_of_collition) + speed.y * sin(angle_of_collition);
         float u2n = other.speed.x * cos(angle_of_collition) + other.speed.y * sin(angle_of_collition);
 
@@ -107,7 +65,8 @@ class Ball {
         speed.x = v1n * cos(angle_of_collition) - v1t*sin(angle_of_collition);
         speed.y = v1n * sin(angle_of_collition) + v1t*cos(angle_of_collition);
         other.speed.x = v2n * cos(angle_of_collition) - v2t*sin(angle_of_collition);
-        other.speed.x = v2n * sin(angle_of_collition) + v2t*cos(angle_of_collition);
+        other.speed.y = v2n * sin(angle_of_collition) + v2t*cos(angle_of_collition);
+        println("k after: "+clacKineEnergy(speed.x,speed.y,other.speed.x,other.speed.y,mass,other.mass));
       }
     }
     addGravity();
@@ -138,17 +97,20 @@ class Ball {
     }
   }
 
+  float clacKineEnergy(float x1,float y1,float x2,float y2,float m1,float m2){
+    return m1*(x1*x1+y1*y1)/2 + m2*(x2*x2+y2*y2)/2 ;
+  }
+
   void show() {
-    float c = map((speed.x + speed.y)/2, 0, 10, 50, 0);
+    float c = map(abs(speed.x + speed.y)/2, 0, 10, 50, 0);
     fill(c, 100, 100);
     circle(pos.x, pos.y, r);
-
-    pushMatrix();
-    textAlign(CENTER);
-    translate(pos.x, pos.y);
-    fill(0);
-    text(id, 0, 0);
-    popMatrix();
+    // pushMatrix();
+    // textAlign(CENTER);
+    // translate(pos.x, pos.y);
+    // fill(0);
+    // text(id, 0, 0);
+    // popMatrix();
   }
 
   void setOtherBalls(Ball[] o) {
