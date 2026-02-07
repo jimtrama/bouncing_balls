@@ -9,15 +9,18 @@ class Ball {
   Ball[] others;
   int id;
   float mass;
+  color c;
 
-  Ball(int i) {
-    position = new PVector(random(0, width), random(0, height));
-    speed = new PVector(random(-5, 5), random(-5, 5));
+
+  Ball(int i,float x,float y) {
+    position = new PVector(x,y);
+    speed = new PVector(0,0);
     accelaration = new PVector(0, 0);
-    mass = 5 * random(1, 5);
+    mass = 20;
     diameter = mass*5;
     radius = diameter/2;
     id = i;
+    c = color(0,0,0);//color(random(0,255),100,100);
   }
 
   void addForce(PVector force) {
@@ -68,7 +71,7 @@ class Ball {
 
   void show() {
     float c = map(abs(speed.x + speed.y)/2, 0, 10, 50, 0);
-    fill(c, 100, 100);
+    fill(c);
     circle(position.x, position.y, diameter);
     // pushMatrix();
     // textAlign(CENTER);
@@ -80,5 +83,8 @@ class Ball {
 
   void setOtherBalls(Ball[] o) {
     others = o;
+  }
+  void clearOtherBalls() {
+    others = new Ball[0];
   }
 }

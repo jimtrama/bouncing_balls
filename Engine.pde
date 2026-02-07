@@ -3,6 +3,7 @@ class Engine {
   float gX;
   float yDumping;
   float xDumping;
+  float friction;
   ArrayList<Ball> balls;
 
   Engine(int howManyBalls) {
@@ -10,10 +11,11 @@ class Engine {
     gX = 0.0;
     yDumping = 1;
     xDumping = 1;
+    friction = 0.01;
     balls = new ArrayList();
 
     for (int i =0; i<howManyBalls; i++) {
-      balls.add(new Ball(i));
+      balls.add(new Ball(i, random(0, width), random(0, height)));
     }
     for (int i = 0; i < balls.size(); i++) {
       Ball[] otherBalls = new Ball[balls.size() - 1];
@@ -24,17 +26,31 @@ class Engine {
           index++;
         }
       }
+      balls.get(i).clearOtherBalls();
       balls.get(i).setOtherBalls(otherBalls);
     }
   }
 
   void addObj(Ball b) {
     balls.add(b);
+    for (int i = 0; i < balls.size(); i++) {
+      Ball[] otherBalls = new Ball[balls.size() - 1];
+      int index = 0 ;
+      for (int j = 0; j < balls.size(); j++) {
+        if (i != j) {
+          otherBalls[index] = balls.get(j);
+          index++;
+        }
+      }
+      balls.get(i).clearOtherBalls();
+      balls.get(i).setOtherBalls(otherBalls);
+    }
   }
 
   void step() {
     for (Ball b : balls) {
       addGravity(b);
+      addFriction(b);
       b.update();
       checkBounds(b);
       b.show();
@@ -43,6 +59,10 @@ class Engine {
 
   void addGravity(Ball b) {
     b.accelaration.add(gX, gY);
+  }
+  void addFriction(Ball b) {
+    b.speed.x *= 0.99;
+    b.speed.y *= 0.99;
   }
 
   void checkBounds(Ball b) {
