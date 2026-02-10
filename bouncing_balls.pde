@@ -26,7 +26,7 @@ void draw() {
   }
   engine.step(holes);
   if(player.fallenIn){
-    engine.resetGame();
+    //engine.resetGame();
     player.reset();
   }
   //saveFrame("./out/frame-########.png");

@@ -14,11 +14,13 @@ class TargetLine {
   }
 
   void show(boolean inMotion) {
+    if (inMotion)
+      return;
     stroke(255);
-    if (fixedDirection && !inMotion) {
+    if (fixedDirection) {
       line(position.x, position.y, lineEnd.x, lineEnd.y);
       drawPower(inMotion);
-    } else if (!inMotion) {
+    } else {
       line(position.x, position.y, mouseX, mouseY);
     }
     stroke(0);
@@ -55,4 +57,3 @@ class TargetLine {
     lineEnd.set(mouseX, mouseY);
   }
 }
-

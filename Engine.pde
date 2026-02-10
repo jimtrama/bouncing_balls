@@ -30,6 +30,7 @@ class Engine {
       addFriction(b);
       checkAndResolveCollitions(b);
       b.update();
+      if(!b.fallenIn)
       checkBounds(b);
       for (Hole h : holes) {
         if (h.touching(b)) {
