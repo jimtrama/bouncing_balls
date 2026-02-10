@@ -5,6 +5,7 @@ class Engine {
   float xDumping;
   float friction;
   ArrayList<Ball> balls;
+  int ballsCount;
 
   Engine(int howManyBalls) {
     gY = 0.0;
@@ -13,7 +14,7 @@ class Engine {
     xDumping = 1;
     friction = 0.99;
     balls = new ArrayList();
-
+    ballsCount = howManyBalls;
     for (int i =0; i<howManyBalls; i++) {
       balls.add(new Ball(i, random(0, width), random(0, height)));
     }
@@ -30,12 +31,21 @@ class Engine {
       checkAndResolveCollitions(b);
       b.update();
       checkBounds(b);
-      b.show();
-      for(Hole h :holes){
-        if(h.touching(b)){
+      for (Hole h : holes) {
+        if (h.touching(b)) {
           b.fallIn();
         }
       }
+      b.show();
+    }
+  }
+
+  void resetGame() {
+    for (Ball b : balls) {
+      if (b.id == -1)
+        continue;
+      b.position.set(random(0, width), random(0, height));
+      b.speed.set(0,0);
     }
   }
 
@@ -46,6 +56,12 @@ class Engine {
   void addFriction(Ball b) {
     b.speed.x *= friction;
     b.speed.y *= friction;
+    if (abs(b.speed.x) <= 0.08) {
+      b.speed.x = 0;
+    }
+    if (abs(b.speed.y) <= 0.08) {
+      b.speed.y = 0;
+    }
   }
 
   void checkAndResolveCollitions(Ball b) {
@@ -106,8 +122,7 @@ class Engine {
     }
   }
 
-  float clacKineEnergy(float x1,float y1,float x2,float y2,float m1,float m2){
+  float clacKineEnergy(float x1, float y1, float x2, float y2, float m1, float m2) {
     return m1*(x1*x1+y1*y1)/2 + m2*(x2*x2+y2*y2)/2 ;
   }
 }
-

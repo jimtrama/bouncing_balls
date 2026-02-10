@@ -3,7 +3,7 @@ Player player;
 ArrayList<Hole> holes;
 void setup() {
   size(1000, 500);
-  windowMove(2000,100);
+  windowMove(2300,100);
   //fullScreen();
   //colorMode(HSB,100);
   holes = new ArrayList();
@@ -13,6 +13,8 @@ void setup() {
   holes.add(new Hole(width,0));
   holes.add(new Hole(0,height));
   holes.add(new Hole(width,height));
+  holes.add(new Hole(width/2,0));
+  holes.add(new Hole(width/2,height));
 
   engine.addObj(player);
 }
@@ -22,6 +24,10 @@ void draw() {
   engine.step(holes);
   for(Hole h:holes){
     h.show();
+  }
+  if(player.fallenIn){
+    engine.resetGame();
+    player.reset();
   }
   //saveFrame("./out/frame-########.png");
 }

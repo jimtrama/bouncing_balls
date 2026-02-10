@@ -14,7 +14,14 @@ class Player extends Ball {
   }
 
   boolean isInMotion(){
-    return speed.x >= 0.0001 || speed.y >= 0.0001;
+    return !(speed.x == 0 && speed.y == 0);
+  }
+
+  void reset(){
+    fallenIn = false;
+    position.set(100,height/2);
+    speed.set(0,0);
+    diameter = 50;
   }
 
   void hit() {

@@ -45,7 +45,7 @@ class Ball {
     fill(c);
     circle(position.x, position.y, diameter);
     if(fallenIn && diameter >=0){
-      diameter-= 0.5;
+      diameter-= 0.9;
     }
     // pushMatrix();
     // textAlign(CENTER);
