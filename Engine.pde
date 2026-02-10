@@ -44,8 +44,10 @@ class Engine {
     for (Ball b : balls) {
       if (b.id == -1)
         continue;
-      b.position.set(random(0, width), random(0, height));
+      b.position.set(random(80, width-80), random(80, height-80));
       b.speed.set(0,0);
+      b.fallenIn = false;
+      b.diameter = 50;
     }
   }
 

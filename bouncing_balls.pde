@@ -21,10 +21,10 @@ void setup() {
 
 void draw() {
   background(0);
-  engine.step(holes);
   for(Hole h:holes){
     h.show();
   }
+  engine.step(holes);
   if(player.fallenIn){
     engine.resetGame();
     player.reset();

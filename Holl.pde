@@ -16,6 +16,6 @@ class Hole{
 
     boolean touching(Ball b){
         float distance = position.dist(b.position);
-        return distance <= radius + b.radius;
+        return distance <= radius ;
     }
 }
