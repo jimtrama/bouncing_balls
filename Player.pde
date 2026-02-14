@@ -4,7 +4,7 @@ class Player extends Ball {
 
   Player(float x, float y) {
     super(-1, x, y);
-    c = color(255,255,255);
+    c = color(255, 255, 255);
     targetLine = new TargetLine(position);
   }
 
@@ -13,22 +13,26 @@ class Player extends Ball {
     targetLine.show(isInMotion());
   }
 
-  boolean isInMotion(){
+  boolean isInMotion() {
     return !(speed.x == 0 && speed.y == 0);
   }
 
-  void reset(){
+  void reset() {
     fallenIn = false;
-    position.set(100,height/2);
-    speed.set(0,0);
+    position.set(100, height/2);
+    speed.set(0, 0);
     diameter = 50;
   }
 
-  void hit() {
+  void hit(boolean first) {
+    if (first) return;
     float[] angleAndForce = targetLine.getAngleAndForce();
     float angle = angleAndForce[0];
     float force = angleAndForce[1];
     targetLine.fixedDirection = false;
+    println(force);
+    println(angle);
     addForce(new PVector(force*cos(angle+PI), force*sin(angle+PI)));
   }
 }
+

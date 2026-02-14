@@ -6,6 +6,7 @@ class Engine {
   float friction;
   ArrayList<Ball> balls;
   int ballsCount;
+  ArrayList<PVector> tragectories;
 
   Engine(int howManyBalls) {
     gY = 0.0;
@@ -15,16 +16,36 @@ class Engine {
     friction = 0.99;
     balls = new ArrayList();
     ballsCount = howManyBalls;
-    for (int i =0; i<howManyBalls; i++) {
+    tragectories = new ArrayList();
+  }
+
+  void intiBalls(){
+    for (int i =0; i<ballsCount; i++) {
       balls.add(new Ball(i, random(0, width), random(0, height)));
     }
+  }
+
+  void setBalls(ArrayList<Ball> bs){
+    balls.clear();
+    for(Ball b : bs){
+      balls.add(b.copy());
+    }
+  }
+
+  ArrayList<Ball> getBalls(){
+    ArrayList<Ball> ballsToReturn = new ArrayList();
+    for(Ball b : balls){
+      if(b.id != -1)
+      ballsToReturn.add(b.copy());
+    }
+    return ballsToReturn;
   }
 
   void addObj(Ball b) {
     balls.add(b);
   }
 
-  void step(ArrayList<Hole> holes) {
+  void update(ArrayList<Hole> holes) {
     for (Ball b : balls) {
       addGravity(b);
       addFriction(b);
@@ -37,6 +58,12 @@ class Engine {
           b.fallIn();
         }
       }
+      tragectories.add(new PVector(b.position.x,b.position.y));
+    }
+  }
+
+  void show(){
+    for(Ball b:balls){
       b.show();
     }
   }

@@ -58,4 +58,8 @@ class Ball {
   void fallIn(){
     fallenIn = true;
   }
+
+  Ball copy(){
+    return new Ball(id,position.x,position.y);
+  }
 }
