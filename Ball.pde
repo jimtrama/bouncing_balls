@@ -27,12 +27,7 @@ class Ball {
   }
 
   void update() {
-    
-    if(fallenIn && diameter<=0){
-      position.set(width*2,height*2);
-      return;
-    }
-    if(fallenIn ){
+    if(fallenIn){
       return;
     }
     speed.add(accelaration);
@@ -41,18 +36,19 @@ class Ball {
   }
 
   void show() {
-    //float c = map(abs(speed.x + speed.y)/2, 0, 10, 50, 0);
     fill(c);
     circle(position.x, position.y, diameter);
-    if(fallenIn && diameter >=0){
-      diameter-= 0.9;
-    }
-    // pushMatrix();
-    // textAlign(CENTER);
-    // translate(pos.x, pos.y);
-    // fill(0);
-    // text(id, 0, 0);
-    // popMatrix();
+    pushMatrix();
+    textAlign(CENTER);
+    translate(position.x, position.y);
+    fill(255);
+    textSize(20);
+    text(id, 0, 0);
+    popMatrix();
+  }
+
+  boolean isInMotion() {
+    return !(speed.x == 0 && speed.y == 0);
   }
 
   void fallIn(){

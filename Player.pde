@@ -13,10 +13,6 @@ class Player extends Ball {
     targetLine.show(isInMotion());
   }
 
-  boolean isInMotion() {
-    return !(speed.x == 0 && speed.y == 0);
-  }
-
   void reset() {
     fallenIn = false;
     position.set(100, height/2);
@@ -24,14 +20,11 @@ class Player extends Ball {
     diameter = 50;
   }
 
-  void hit(boolean first) {
-    if (first) return;
+  void hit() {
     float[] angleAndForce = targetLine.getAngleAndForce();
     float angle = angleAndForce[0];
     float force = angleAndForce[1];
     targetLine.fixedDirection = false;
-    println(force);
-    println(angle);
     addForce(new PVector(force*cos(angle+PI), force*sin(angle+PI)));
   }
 }

@@ -19,26 +19,33 @@ class Engine {
     tragectories = new ArrayList();
   }
 
-  void intiBalls(){
+  void intiBalls() {
     for (int i =0; i<ballsCount; i++) {
       balls.add(new Ball(i, random(0, width), random(0, height)));
     }
   }
 
-  void setBalls(ArrayList<Ball> bs){
+  void setBalls(ArrayList<Ball> bs) {
     balls.clear();
-    for(Ball b : bs){
+    for (Ball b : bs) {
       balls.add(b.copy());
     }
   }
 
-  ArrayList<Ball> getBalls(){
+  ArrayList<Ball> getBalls() {
     ArrayList<Ball> ballsToReturn = new ArrayList();
-    for(Ball b : balls){
-      if(b.id != -1)
+    for (Ball b : balls) {
       ballsToReturn.add(b.copy());
     }
     return ballsToReturn;
+  }
+
+  void hit(float force,float angle){
+    for(Ball b : balls){
+      if(b.id == -1){
+        b.addForce(new PVector(force*cos(angle+PI), force*sin(angle+PI)));
+      }
+    }
   }
 
   void addObj(Ball b) {
@@ -46,24 +53,28 @@ class Engine {
   }
 
   void update(ArrayList<Hole> holes) {
-    for (Ball b : balls) {
-      addGravity(b);
-      addFriction(b);
-      checkAndResolveCollitions(b);
-      b.update();
-      if(!b.fallenIn)
-      checkBounds(b);
+    for (int i = 0 ; i < balls.size();i++) {
+      addGravity(balls.get(i));
+      addFriction(balls.get(i));
+      checkAndResolveCollitions(balls.get(i));
+      balls.get(i).update();
+      if (!balls.get(i).fallenIn)
+        checkBounds(balls.get(i));
       for (Hole h : holes) {
-        if (h.touching(b)) {
-          b.fallIn();
+        if (h.touching(balls.get(i))) {
+          if (balls.get(i).id != -1) {
+            balls.remove(i);
+            //break;
+          } else
+            balls.get(i).fallIn();
         }
       }
-      tragectories.add(new PVector(b.position.x,b.position.y));
+      tragectories.add(new PVector(balls.get(i).position.x, balls.get(i).position.y));
     }
   }
 
-  void show(){
-    for(Ball b:balls){
+  void show() {
+    for (Ball b : balls) {
       b.show();
     }
   }
@@ -73,7 +84,7 @@ class Engine {
       if (b.id == -1)
         continue;
       b.position.set(random(80, width-80), random(80, height-80));
-      b.speed.set(0,0);
+      b.speed.set(0, 0);
       b.fallenIn = false;
       b.diameter = 50;
     }
@@ -154,5 +165,14 @@ class Engine {
 
   float clacKineEnergy(float x1, float y1, float x2, float y2, float m1, float m2) {
     return m1*(x1*x1+y1*y1)/2 + m2*(x2*x2+y2*y2)/2 ;
+  }
+
+  boolean ballsAreInMotion() {
+    for (Ball b : balls) {
+      if (b.isInMotion()) {
+        return true;
+      }
+    }
+    return false;
   }
 }
