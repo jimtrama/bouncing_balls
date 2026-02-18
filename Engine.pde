@@ -9,7 +9,7 @@ class Engine {
   ArrayList<PVector> tragectories;
 
   Engine(int howManyBalls) {
-    gY = 0.0;
+    gY = 0.1;
     gX = 0.0;
     yDumping = 1;
     xDumping = 1;
@@ -33,18 +33,12 @@ class Engine {
   }
 
   ArrayList<Ball> getBalls() {
-    ArrayList<Ball> ballsToReturn = new ArrayList();
-    for (Ball b : balls) {
-      ballsToReturn.add(b.copy());
-    }
-    return ballsToReturn;
+    return balls;
   }
 
-  void hit(float force,float angle){
-    for(Ball b : balls){
-      if(b.id == -1){
-        b.addForce(new PVector(force*cos(angle+PI), force*sin(angle+PI)));
-      }
+  void hit(float force, float angle) {
+    for (Ball b : balls) {
+      b.addForce(new PVector(force*cos(angle+PI), force*sin(angle+PI)));
     }
   }
 
@@ -52,23 +46,14 @@ class Engine {
     balls.add(b);
   }
 
-  void update(ArrayList<Hole> holes) {
-    for (int i = 0 ; i < balls.size();i++) {
+  void update() {
+    for (int i = 0; i < balls.size(); i++) {
       addGravity(balls.get(i));
       addFriction(balls.get(i));
       checkAndResolveCollitions(balls.get(i));
       balls.get(i).update();
-      if (!balls.get(i).fallenIn)
-        checkBounds(balls.get(i));
-      for (Hole h : holes) {
-        if (h.touching(balls.get(i))) {
-          if (balls.get(i).id != -1) {
-            balls.remove(i);
-            //break;
-          } else
-            balls.get(i).fallIn();
-        }
-      }
+      checkBounds(balls.get(i));
+
       tragectories.add(new PVector(balls.get(i).position.x, balls.get(i).position.y));
     }
   }
